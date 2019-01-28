@@ -2,3 +2,5 @@
 ----++++==== Some text for test.txt ====++++----
 
 ----++++==== Some text for test.txt ====++++----
+
+.
