@@ -12,21 +12,43 @@ config.vm.define "server1" do |server1|
 	#server1.vm.network :forwarded_port, guest: 22, host: 2201
 	server1.vm.provision "shell", inline: <<-SHELL
 		yum install git -y
-		mkdir /git
-		chown vagrant /git
+		if ! [ -d /git/ ]; then
+			mkdir /git
+			chown vagrant /git
+			chmod -R 775 /git
+		fi
 		cd /git
 		git clone http://github.com/dim8n/Module2.git -b task2 -q
+		cd /git/Module2
+		#проверить, если есть каталог /git/Module2, то просто выполнить git pull
+		#или просто удалить и создать заново?
+		git config --global user.email "d.elizarov@gmail.com"
+		git config --global user.name "dim8n"
+		git stash
+		git pull
 		cat /git/Module2/test.txt
+		#пинговать нужно после того как все машины стартанут
+		#ping -c 1 server2
 	SHELL
 end
 
 config.vm.define "server2" do |server2|
+	server2.vm.provision "shell", inline: <<-SHELL
+		#пинговать нужно после того как все машины стартанут
+		#ping -c 1 server1
+	SHELL
 	server2.vm.hostname = "server2"
 	server2.vm.network "private_network", ip: "192.168.0.11"
 	#server2.vm.network :forwarded_port, guest: 22, host: 2202
 end
 
 config.vm.provision "shell", inline: <<-SHELL
+	#проверить, если присутствует такая строка, то не добавлять
+	echo "192.168.0.10 server1\n192.168.0.11 server2\n" > /etc/hosts
+	#grep "server" /etc/hosts > /dev/null
+	#if [ $? -ne 0 ]; then
+	#	echo "No changes of file /etc/hosts needed"
+	#fi
 	yum install mc -y
 SHELL
 
