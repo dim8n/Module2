@@ -12,20 +12,17 @@ config.vm.define "server1" do |server1|
 	#server1.vm.network :forwarded_port, guest: 22, host: 2201
 	server1.vm.provision "shell", inline: <<-SHELL
 		yum install git -y
-		if ! [ -d /git/ ]; then
-			mkdir /git
-			chown vagrant /git
-			chmod -R 775 /git
+		#проверить, если есть каталог /git/Module2, то просто выполнить git pull
+		#или просто удалить и создать заново?
+		if [ -d /git/ ]; then
+			rm -Rf /git/
 		fi
+		mkdir /git
+		chown vagrant /git
+		chmod -R 775 /git
 		cd /git
 		git clone http://github.com/dim8n/Module2.git -b task2 -q
 		cd /git/Module2
-		#проверить, если есть каталог /git/Module2, то просто выполнить git pull
-		#или просто удалить и создать заново?
-		git config --global user.email "d.elizarov@gmail.com"
-		git config --global user.name "dim8n"
-		git stash
-		git pull
 		cat /git/Module2/test.txt
 		#пинговать нужно после того как все машины стартанут
 		#ping -c 1 server2
