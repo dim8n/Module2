@@ -6,6 +6,16 @@ Vagrant.configure("2") do |config|
 		vb.cpus = 2
 	end
 
+	config.trigger.before :up do |trigger|
+		trigger.name = "Hello world"
+		trigger.info = "I am running before vagrant up!!"
+	end
+
+	config.trigger.after :up do |trigger|
+		trigger.name = "Hello world"
+		trigger.info = "I am running after vagrant up!!"
+	end
+
 #config.trigger.after :up do |trigger|
 #	trigger.name = "Finished Message"
 #	trigger.info = "Machines is up!"
