@@ -15,6 +15,7 @@ config.vm.define "server1" do |server1|
 		#проверить, если есть каталог /git/Module2, то просто выполнить git pull
 		#или просто удалить и создать заново?
 		if [ -d /git/ ]; then
+			echo "++++ deleting /git folder"
 			rm -Rf /git/
 		fi
 		mkdir /git
@@ -40,12 +41,8 @@ config.vm.define "server2" do |server2|
 end
 
 config.vm.provision "shell", inline: <<-SHELL
-	#проверить, если присутствует такая строка, то не добавлять
-	echo "192.168.0.10 server1\n192.168.0.11 server2\n" > /etc/hosts
-	#grep "server" /etc/hosts > /dev/null
-	#if [ $? -ne 0 ]; then
-	#	echo "No changes of file /etc/hosts needed"
-	#fi
+	#проверка, если нет записи в файле /etc/hosts, то добавить или не делать ничего
+	grep -q 'server[1-2]' '/etc/hosts' && echo "++++ hosts file is good" || echo "192.168.0.10 server1\n192.168.0.11 server2\n" > /etc/hosts;
 	yum install mc -y
 SHELL
 
