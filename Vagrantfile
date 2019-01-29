@@ -23,7 +23,10 @@ config.vm.define "server1" do |server1|
 		cat /git/Module2/test.txt
 		if ! [ -f /home/vagrant/.ssh/id_rsa_srv1 ]; then
 			sudo -u vagrant ssh-keygen -t rsa -q -N '' -f /home/vagrant/.ssh/id_rsa_srv1
-			cp /home/vagrant/.ssh/id_rsa_srv1* /vagrant/
+			cp /home/vagrant/.ssh/id_rsa_srv1.pub /vagrant/
+		fi
+		if [ -f /vagrant/id_rsa_srv2.pub ]; then
+			sudo -u vagrant cat /vagrant/id_rsa_srv2.pub >> /home/vagrant/.ssh/authorized_keys
 		fi
 	SHELL
 end
@@ -32,9 +35,12 @@ config.vm.define "server2" do |server2|
 	server2.vm.hostname = "server2"
 	server2.vm.network "private_network", ip: "192.168.0.11"
 	server2.vm.provision "shell", inline: <<-SHELL
-		if ! [ -f /home/vagrant/.ssh/id_rsa_srv2 ]; then
+		if ! [ -f /home/vagrant/.ssh/id_rsa_srv2.pub ]; then
 			sudo -u vagrant ssh-keygen -t rsa -q -N '' -f /home/vagrant/.ssh/id_rsa_srv2
-			cp /home/vagrant/.ssh/id_rsa_srv2* /vagrant/
+			cp /home/vagrant/.ssh/id_rsa_srv2.pub /vagrant/
+		fi
+		if [ -f /vagrant/id_rsa_srv1.pub ]; then
+			sudo -u vagrant cat /vagrant/id_rsa_srv1.pub >> /home/vagrant/.ssh/authorized_keys
 		fi
 	SHELL
 end
