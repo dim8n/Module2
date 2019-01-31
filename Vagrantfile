@@ -26,7 +26,7 @@ config.vm.define "server1" do |server1|
 			cp -f -v /home/vagrant/.ssh/id_rsa.pub /vagrant/id_rsa_srv1.pub
 		fi
 		if [ -f /vagrant/id_rsa_srv2.pub ]; then
-			grep -q 'vagrant@server2'	/home/vagrant/.ssh/authorized_keys || sudo -u vagrant cat /vagrant/id_rsa_srv2.pub >> /home/vagrant/.ssh/authorized_keys
+			grep -q 'vagrant@server2' /home/vagrant/.ssh/authorized_keys || sudo -u vagrant cat /vagrant/id_rsa_srv2.pub >> /home/vagrant/.ssh/authorized_keys
 			chmod 600 /home/vagrant/.ssh/authorized_keys
 			chmod 700 /home/vagrant/.ssh/
 		fi
@@ -42,7 +42,7 @@ config.vm.define "server2" do |server2|
 			cp -f -v /home/vagrant/.ssh/id_rsa.pub /vagrant/id_rsa_srv2.pub
 		fi
 		if [ -f /vagrant/id_rsa_srv1.pub ]; then
-			grep -q 'vagrant@server1'	/home/vagrant/.ssh/authorized_keys || sudo -u vagrant cat /vagrant/id_rsa_srv1.pub >> /home/vagrant/.ssh/authorized_keys
+			grep -q 'vagrant@server1' /home/vagrant/.ssh/authorized_keys || sudo -u vagrant cat /vagrant/id_rsa_srv1.pub >> /home/vagrant/.ssh/authorized_keys
 			chmod 600 /home/vagrant/.ssh/authorized_keys
 			chmod 700 /home/vagrant/.ssh/
 		fi
