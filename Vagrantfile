@@ -1,4 +1,4 @@
-Vagrant.configure("2") do |config| 
+Vagrant.configure("2") do |config|
 	config.vm.box = "bento/centos-7.5"
 	config.vm.provider "virtualbox" do |vb|
 		vb.gui = false
@@ -22,11 +22,13 @@ config.vm.define "server1" do |server1|
 		cd /git/Module2
 		cat /git/Module2/test.txt
 		if ! [ -f /home/vagrant/.ssh/id_rsa_srv1 ]; then
-			sudo -u vagrant ssh-keygen -t rsa -q -N '' -f /home/vagrant/.ssh/id_rsa_srv1
-			cp /home/vagrant/.ssh/id_rsa_srv1.pub /vagrant/
+			sudo -u vagrant ssh-keygen -t rsa -q -N '' -f /home/vagrant/.ssh/id_rsa
+			cp /home/vagrant/.ssh/id_rsa.pub /vagrant/id_rsa_srv1.pub
 		fi
 		if [ -f /vagrant/id_rsa_srv2.pub ]; then
 			sudo -u vagrant cat /vagrant/id_rsa_srv2.pub >> /home/vagrant/.ssh/authorized_keys
+			chmod 600 /home/vagrant/.ssh/authorized_keys
+			chmod 700 /home/vagrant/.ssh/
 		fi
 	SHELL
 end
@@ -36,11 +38,13 @@ config.vm.define "server2" do |server2|
 	server2.vm.network "private_network", ip: "192.168.0.11"
 	server2.vm.provision "shell", inline: <<-SHELL
 		if ! [ -f /home/vagrant/.ssh/id_rsa_srv2.pub ]; then
-			sudo -u vagrant ssh-keygen -t rsa -q -N '' -f /home/vagrant/.ssh/id_rsa_srv2
-			cp /home/vagrant/.ssh/id_rsa_srv2.pub /vagrant/
+			sudo -u vagrant ssh-keygen -t rsa -q -N '' -f /home/vagrant/.ssh/id_rsa
+			cp /home/vagrant/.ssh/id_rsa.pub /vagrant/id_rsa_srv2.pub
 		fi
 		if [ -f /vagrant/id_rsa_srv1.pub ]; then
 			sudo -u vagrant cat /vagrant/id_rsa_srv1.pub >> /home/vagrant/.ssh/authorized_keys
+			chmod 600 /home/vagrant/.ssh/authorized_keys
+			chmod 700 /home/vagrant/.ssh/
 		fi
 	SHELL
 end
