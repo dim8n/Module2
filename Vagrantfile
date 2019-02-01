@@ -19,9 +19,9 @@ Vagrant.configure("2") do |config|
 			chmod -R 775 /git
 			cd /git
 			git clone http://github.com/dim8n/Module2.git -b task2 -q
+			git checkout task2
 			cd /git/Module2
 			cat /git/Module2/test.txt
-			git checkout task2
 			if ! [ -f /home/vagrant/.ssh/id_rsa_srv1 ]; then
 				sudo -u vagrant ssh-keygen -t rsa -q -N '' -f /home/vagrant/.ssh/id_rsa
 				cp -f -v /home/vagrant/.ssh/id_rsa.pub /vagrant/id_rsa_srv1.pub
